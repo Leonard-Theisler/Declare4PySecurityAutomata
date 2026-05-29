@@ -194,15 +194,14 @@ class D4PyEventLog:
             print(f"{e} attribute does not exist. Check the log.")
         return list(attribute_values)
     """
-    def get_trace(self, id_trace: int = None) -> Trace:
+    def get_trace(self, id_trace: int) -> Trace:
         if self.log is None:
             raise RuntimeError("You must load a log before.")
-        try:
-            return self.log[id_trace]
-        except IndexError:
-            print("The index of the trace must be lower than the log size.")
-        except TypeError as e:
-            print(f"The index of the trace must be integers or slices, not {e}.")
+        if not isinstance(id_trace, int):
+            raise TypeError("The trace index must be an integer.")
+        if id_trace < 0 or id_trace >= self.log_length:
+            raise IndexError("The trace index must be lower than the log size.")
+        return self.log[id_trace]
 
     def attribute_log_projection(self, attribute_name: str = None) -> List[List[str]]:
         """
