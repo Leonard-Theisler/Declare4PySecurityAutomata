@@ -165,7 +165,7 @@ class LTLAnalyzer(AbstractConformanceChecking):
             traces = g_log._list
             with multiprocessing.Pool(processes=workers) as pool:
                 results = pool.map(run_single_trace_par, zip(traces, [dfa] * len(traces),
-                                                                  [backend2dfa] * len(traces)
+                                                                  [backend2dfa] * len(traces),
                                                                   [attributes] * len(traces)))
         return pandas.DataFrame(results, columns=[self.event_log.case_id_key, "accepted"])
 
