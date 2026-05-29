@@ -105,7 +105,7 @@ class DeclareMiner(AbstractDiscovery, ABC):
             elif length == 2:
                 for template in DeclareModelTemplate.get_binary_not_shortcut_templates():
                     # constraint = {"template": templ, "activities": ', '.join(item_set), "condition": ("", "", "")}
-                    constraint = {"template": template, "activities": list(item_set), "condition": ("", "")}
+                    constraint = {"template": template, "activities": list(item_set), "condition": ("", "", "")}
                     # self.basic_discovery_results,= self.discover_constraint(self.event_log, constraint,
                     #                                                        self.consider_vacuity)
                     constraint_satisfaction = ConstraintChecker().constraint_checking_with_support(constraint,

@@ -1181,7 +1181,11 @@ class DeclareModel(LTLModel):
             constraint_str = constraint['template'].templ_str
             if constraint['template'].supports_cardinality:
                 constraint_str += str(constraint['n'])
-            constraint_str += '[' + ", ".join(constraint["activities"]) + '] |' + ' |'.join(constraint["condition"])
+            conditions = list(constraint["condition"])
+            required_conditions = 3 if constraint['template'].is_binary else 2
+            if len(conditions) < required_conditions:
+                conditions.extend([""] * (required_conditions - len(conditions)))
+            constraint_str += '[' + ", ".join(constraint["activities"]) + '] |' + ' |'.join(conditions)
             self.serialized_constraints.append(constraint_str)
 
     def get_decl_model_activities(self):
