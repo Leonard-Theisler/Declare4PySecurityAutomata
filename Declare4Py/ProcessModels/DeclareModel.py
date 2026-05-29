@@ -1184,6 +1184,10 @@ class DeclareModel(LTLModel):
             constraint_str += '[' + ", ".join(constraint["activities"]) + '] |' + ' |'.join(constraint["condition"])
             self.serialized_constraints.append(constraint_str)
 
+    def get_decl_model_activities(self):
+        """Returns the activities of the Declare model"""
+        return self.activities
+
     def get_decl_model_constraints(self):
         """Returns the serialized constraints of the Declare model"""
         return self.serialized_constraints
