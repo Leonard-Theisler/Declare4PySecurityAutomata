@@ -26,12 +26,21 @@ to install the required dependencies in the `requirements.txt` file. As an alter
 In addition, the [Lydia](https://github.com/whitemech/lydia) backend for the LTLf conformance checking need to be installed with Docker:
 1. Install [Docker](https://www.docker.com/get-started/);
 2. Download the Lydia Docker image with `docker pull whitemech/lydia:latest`;
-3. Make the Docker image executable under the name `lydia`. On Linux and MacOS machines, the following commands should work:
+3. Make the Docker image executable under the name `lydia`.
+
+3.1. Install with Linux or MacOS:
 ```
 echo '#!/usr/bin/env sh' > lydia
 echo 'docker run -v$(pwd):/home/default whitemech/lydia lydia "$@"' >> lydia
 sudo chmod u+x lydia
 sudo mv lydia /usr/local/bin/
+```
+
+3.2. Install with Windows:
+Create a `lydia.bat` file in a directory included in your `PATH` with the following content:
+```
+@echo off
+docker run -v "%cd%:/home/default" whitemech/lydia lydia %*
 ```
 4. More information can be found [here](https://github.com/whitemech/logaut).
 
