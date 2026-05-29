@@ -1,0 +1,20 @@
+activity Receive Expense Report
+activity Create new account
+activity Review report
+activity Automatic approval
+activity Approval by supervisor
+activity Send rejection notice
+activity Reimburse via direct deposit
+activity Send approval in progress email
+activity Send cancellation notice
+Existence1[Review report] | |
+Existence1[Send rejection notice] | |
+Response[Review report, Automatic approval] | | |
+Response[Review report, Approval by supervisor] | | |
+Response[Review report, Send approval in progress email] | | |
+Precedence[Automatic approval, Reimburse via direct deposit] | | |
+Precedence[Approval by supervisor, Reimburse via direct deposit] | | |
+Not Co-Existence[Send rejection notice, Reimburse via direct deposit] | | |
+Not Succession[Send rejection notice, Reimburse via direct deposit] | | |
+Not Response[Review report, Send cancellation notice] | | |
+Succession[Receive Expense Report, Create new account] | | |

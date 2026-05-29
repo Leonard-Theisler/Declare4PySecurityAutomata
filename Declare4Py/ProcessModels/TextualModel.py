@@ -1,6 +1,6 @@
 from abc import ABC
-from Declare4Py.ProcessModels import DeclareModel
-from Declare4Py.Utils.Declare import DeclarePrompts
+from Declare4Py.ProcessModels.DeclareModel import DeclareModel
+from Declare4Py.Utils.Declare.DeclarePrompts import DeclarePrompts
 from Declare4Py.ProcessModels.AbstractModel import ProcessModel
 from typing import List
 from groq import Groq, GroqError
@@ -8,7 +8,7 @@ import os
 
 
 class TextualModel(ProcessModel, ABC):
-    def __init__(self, textual_description: str):
+    def __init__(self, textual_description: str = ""):
         super().__init__()
         self.textual_description = textual_description
         
@@ -58,12 +58,11 @@ class TextualModel(ProcessModel, ABC):
             raise ValueError(f"The model {llm_model} is not available. Please choose from the available ones and try again.\n Available models: {available_models}.")
 
         # Format the prompt with the textual description and interaction status
-        formatted_prompt_formatting_information = self.prompt_formatting_information.format(textual_description=self.textual_description)
         interaction_statuses = ["Consider this text and extract highly reliable declarative constraints. No interaction with the user will be available, so please be as precise as possible in your response.", "Consider this text and, if you find it necessary, ask me questions to clary whatever may be unclear and the extract highly reliable declarative constraints."]
         if interactive:
-            formatted_prompt_formatting_information = formatted_prompt_formatting_information.format(interaction_status=interaction_statuses[1])
+            formatted_prompt_formatting_information = self.prompt_formatting_information.format(textual_description=self.textual_description, interaction_status=interaction_statuses[1])
         else:
-            formatted_prompt_formatting_information = formatted_prompt_formatting_information.format(interaction_status=interaction_statuses[0])
+            formatted_prompt_formatting_information = self.prompt_formatting_information.format(textual_description=self.textual_description, interaction_status=interaction_statuses[0])
 
         # Load pre-set promt into the conversation
         conversation = []
@@ -143,7 +142,7 @@ class TextualModel(ProcessModel, ABC):
             parsed_content = TextualModel.parse_llm_result(last_reply)
 
             # Generate model from parsed string
-            model = DeclareModel.parse_from_string(self, content=parsed_content) 
+            model = DeclareModel().parse_from_string(parsed_content)
 
             return model
         
@@ -155,8 +154,8 @@ class TextualModel(ProcessModel, ABC):
         # Extract constraints from the LLM response
         constraints = TextualModel.parse_response_constraints(response)
 
-        # From constraints find the activities
-        activities = TextualModel.parse_response_activities(constraints)
+        # From the full LLM response find the activities
+        activities = TextualModel.parse_response_activities(response)
 
         # If activities are not found, try to parse them from constraints
         str = "No activities found in the LLM reply."
