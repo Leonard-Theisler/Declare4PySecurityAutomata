@@ -23,7 +23,7 @@ or with the [venv](https://docs.python.org/3/library/venv.html) Python utility. 
 download the Declare4Py project on your local machine, activate the created virtual environment and use `pip` or `conda` 
 to install the required dependencies in the `requirements.txt` file. As an alternative you can install Declare4py from [PyPi](https://pypi.org/project/declare4py/).
 
-In addition, the [Lydia](https://github.com/whitemech/lydia) backend for the LTLf conformance checking need to be installed with Docker:
+In addition, the [Lydia](https://github.com/whitemech/lydia) backend for the LTLf conformance checking needs to be installed with Docker:
 1. Install [Docker](https://www.docker.com/get-started/);
 2. Download the Lydia Docker image with `docker pull whitemech/lydia:latest`;
 3. Make the Docker image executable under the name `lydia`.
