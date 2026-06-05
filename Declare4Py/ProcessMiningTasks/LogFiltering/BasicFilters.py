@@ -6,6 +6,9 @@ from typing import Union, Set, List, Tuple, Dict
 import packaging
 from packaging import version
 
+from Declare4Py.ProcessMiningTasks.ConformanceChecking.LTLAnalyzer import LTLAnalyzer
+from Declare4Py.ProcessModels.LTLModel import LTLModel
+
 
 class BasicFilters:
 
@@ -91,6 +94,36 @@ class BasicFilters:
         else:
             filter_activities = pm4py.filter_end_activities(self.event_log.log, activities)
             return filter_activities
+
+    def filter_Linear_Temporal_Properties(self, models: LTLModel or [LTLModel], retain: bool = True, case_name_key: str="case:concept:name" ) -> EventLog:
+        """
+                Filter cases having satisfying the linear temporal properties described in the given model(s)
+
+                Args:
+                    models: collection of LTLf models
+                    retain: if True, we retain the traces satisfying the given models, if false, we drop the traces
+                    case_name_key: attribute to be used for the case name
+
+                Returns:
+                    Returns filtered log containing cases satisfying the linear temporal properties described in the given models.
+
+                """
+        analyzer = LTLAnalyzer(self.event_log, models)
+        if isinstance(models, LTLModel):
+            conf_check_res_df = analyzer.run()
+        else:
+            conf_check_res_df = analyzer.run_multiple_models()
+
+        case_ids = set(conf_check_res_df[conf_check_res_df['accepted'] == True][case_name_key].astype(str))
+        if retain:
+            return  EventLog([trace for trace in self.event_log.log if str(trace.attributes.get("concept:name")) in case_ids],
+            attributes=self.event_log.log.attributes, extensions=self.event_log.log.extensions, classifiers=self.event_log.log.classifiers, properties=self.event_log.log.properties)
+        else:
+            return  EventLog([trace for trace in self.event_log.log if str(trace.attributes.get("concept:name")) not in case_ids],
+            attributes=self.event_log.log.attributes, extensions=self.event_log.log.extensions, classifiers=self.event_log.log.classifiers, properties=self.event_log.log.properties)
+
+
+
 
     def filter_variants_top_k(self, k: int, activity_key: str = "concept:name") -> EventLog:
         """

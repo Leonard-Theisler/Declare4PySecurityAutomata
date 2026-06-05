@@ -108,6 +108,11 @@ class D4PyEventLog:
             raise RuntimeError("You must load a log before.")
         return self.case_id_key
 
+    def get_activity_name(self) -> str:
+        if self.log_length is None:
+            raise RuntimeError("You must load a log before.")
+        return self.activity_key
+
     def get_timestamp_name(self) -> str:
         if self.log_length is None:
             raise RuntimeError("You must load a log before.")

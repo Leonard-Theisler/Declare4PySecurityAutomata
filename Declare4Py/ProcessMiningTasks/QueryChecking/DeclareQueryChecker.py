@@ -147,7 +147,7 @@ class DeclareQueryChecker(AbstractQueryChecking, ABC):
         targets_to_check = self.event_log.get_event_attribute_values(self.event_log.activity_key) \
             if self.target is None else [self.target]
         if not isinstance(targets_to_check, list):
-            activations_to_check = targets_to_check.keys()
+            targets_to_check = targets_to_check.keys()
 
         activity_combos = []
         for activation in activations_to_check:
