@@ -1,4 +1,4 @@
-activity request_measurement
+activity request_measurements
 activity check_request
 activity deny_request
 activity perform_measurement
@@ -7,11 +7,11 @@ activity transmit_values
 activity process_values
 activity send_changed_values
 activity transmit_readings
-Response[request_measurement, check_request] | | |
-Response[perform_measurement, transmit_values] | | |
+Response[request_measurements, check_request] | | |
 Response[deny_request, inform_failure] | | |
+Response[perform_measurement, transmit_values] | | |
 Response[transmit_values, process_values] | | |
 Response[process_values, send_changed_values] | | |
-Init[request_measurement] | |
-Succession[send_changed_values, transmit_readings] | | |
+Response[send_changed_values, transmit_readings] | | |
+Init[request_measurements] | |
 Exclusive Choice[deny_request, perform_measurement] | | |

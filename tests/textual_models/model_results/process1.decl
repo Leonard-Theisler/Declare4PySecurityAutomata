@@ -1,20 +1,18 @@
-activity Receive Expense Report
-activity Create new account
-activity Review report
-activity Automatic approval
-activity Approval by supervisor
-activity Send rejection notice
-activity Reimburse via direct deposit
-activity Send approval in progress email
-activity Send cancellation notice
-Existence1[Review report] | |
-Existence1[Send rejection notice] | |
-Response[Review report, Automatic approval] | | |
-Response[Review report, Approval by supervisor] | | |
-Response[Review report, Send approval in progress email] | | |
-Precedence[Automatic approval, Reimburse via direct deposit] | | |
-Precedence[Approval by supervisor, Reimburse via direct deposit] | | |
-Not Co-Existence[Send rejection notice, Reimburse via direct deposit] | | |
-Not Succession[Send rejection notice, Reimburse via direct deposit] | | |
-Not Response[Review report, Send cancellation notice] | | |
-Succession[Receive Expense Report, Create new account] | | |
+activity receive_expense_report
+activity review_report
+activity automatic_approval
+activity supervisor_approval
+activity reject
+activity send_rejection_email
+activity reimbursement
+activity process_stopped
+activity send_cancellation_email
+activity resubmit_expense_report
+Response[receive_expense_report, review_report] | | |
+Response[reject, send_rejection_email] | | |
+Response[process_stopped, send_cancellation_email] | | |
+Response[send_cancellation_email, resubmit_expense_report] | | |
+Precedence[review_report, automatic_approval] | | |
+Precedence[review_report, supervisor_approval] | | |
+Not Response[reject, reimbursement] | | |
+Exclusive Choice[automatic_approval, supervisor_approval] | | |

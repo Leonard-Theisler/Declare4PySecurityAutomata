@@ -2,9 +2,9 @@ from abc import ABC
 from Declare4Py.ProcessModels.DeclareModel import DeclareModel
 from Declare4Py.Utils.Declare.DeclarePrompts import DeclarePrompts
 from Declare4Py.ProcessModels.AbstractModel import ProcessModel
-from typing import List
+from typing import List, Optional
 from groq import Groq, GroqError
-import os
+import re
 
 
 class TextualModel(ProcessModel, ABC):
@@ -24,39 +24,68 @@ class TextualModel(ProcessModel, ABC):
         self.textual_description = TextualModel.read_file(model_path)
 
 
-    def to_decl (self, api_key, interactive : bool = False, llm_model : str = "meta-llama/llama-4-scout-17b-16e-instruct", **kwargs) -> DeclareModel:
+    @staticmethod
+    def get_available_models(client: Groq) -> List[str]:
+        """Retrieve the model identifiers currently available from Groq."""
+        response = client.models.list()
+        models = response.get("data", []) if isinstance(response, dict) else response.data
+
+        model_ids = []
+        for model in models:
+            model_id = model.get("id") if isinstance(model, dict) else model.id
+            if model_id:
+                model_ids.append(model_id)
+
+        return sorted(model_ids)
+
+    @staticmethod
+    def select_best_model(available_models: List[str]) -> str:
+        """Select the strongest general-purpose text model from the available IDs."""
+        if not available_models:
+            raise ValueError("Groq did not return any available models.")
+
+        excluded_terms = (
+            "guard",
+            "whisper",
+            "distil-whisper",
+            "speech",
+            "tts",
+        )
+        text_models = [
+            model_id
+            for model_id in available_models
+            if not any(term in model_id.lower() for term in excluded_terms)
+        ]
+        candidates = text_models or available_models
+
+        def model_score(model_id: str):
+            normalized_id = model_id.lower()
+            parameter_sizes = [
+                float(size)
+                for size in re.findall(r"(\d+(?:\.\d+)?)b(?:\W|$)", normalized_id)
+            ]
+            parameter_size = max(parameter_sizes, default=0)
+            return (
+                parameter_size,
+                "instruct" in normalized_id or "versatile" in normalized_id,
+                "instant" not in normalized_id,
+                normalized_id,
+            )
+
+        return max(candidates, key=model_score)
+
+    def to_decl (self, api_key, interactive : bool = False, llm_model : Optional[str] = None, **kwargs) -> DeclareModel:
         """
         This method handles, with a LLM, the textual description of the process to extract the declarative constraints,
-        Then represents it as instance of the object Model and returns
+        then represents it as an instance of DeclareModel and returns it.
+
+        If llm_model is not provided, the strongest general-purpose text model
+        returned by the Groq API is selected automatically.
         """
         # if interactive is not a boolean, set it to its default value False
         if not isinstance(interactive, bool):
             interactive = False
         
-        # Set up API key and model name
-        os.environ["GROQ_API_KEY"] = api_key #set environment variable
-        
-        # Check if the provided model is available
-        # Note: The list of available models should be updated based on the actual models available on Groq
-        available_models = ["qwen-qwq-32b",
-            "deepseek-r1-distill-llama-70b",
-            "gemma2-9b-it",
-            "compound-beta",
-            "compound-beta-mini",
-            "llama-3.1-8b-instant",
-            "llama-3.3-70b-versatile",
-            "llama-guard-3-8b",
-            "llama3-70b-8192",
-            "llama3-8b-8192",
-            "meta-llama/llama-4-maverick-17b-128e-instruct",
-            "meta-llama/llama-4-scout-17b-16e-instruct",
-            "meta-llama/llama-guard-4-12b",
-            "meta-llama/llama-prompt-guard-2-22m",
-            "meta-llama/llama-prompt-guard-2-86m",
-            "mistral-saba-24b"]
-        if llm_model not in available_models:
-            raise ValueError(f"The model {llm_model} is not available. Please choose from the available ones and try again.\n Available models: {available_models}.")
-
         # Format the prompt with the textual description and interaction status
         interaction_statuses = ["Consider this text and extract highly reliable declarative constraints. No interaction with the user will be available, so please be as precise as possible in your response.", "Consider this text and, if you find it necessary, ask me questions to clary whatever may be unclear and the extract highly reliable declarative constraints."]
         if interactive:
@@ -79,20 +108,30 @@ class TextualModel(ProcessModel, ABC):
 
         try:
             # Initialize client for Groq API using the API key
-            # Note: Ensure you have the Groq library installed and configured correctly
-            client = Groq()
+            client = Groq(api_key=api_key)
+            available_models = TextualModel.get_available_models(client)
+            if llm_model is None:
+                llm_model = TextualModel.select_best_model(available_models)
+            elif llm_model not in available_models:
+                raise ValueError(
+                    f"The model {llm_model} is not available. "
+                    f"Available models: {available_models}."
+                )
 
             # Since the user is available to interact with the LLM we start a cmd line chat
             if interactive:
                 # Introduce chat
-                print(f"This is a new chat with Ollama model {llm_model} \n   Once you are satisfied with the results, please type 'exit' to close the chat")
+                print(
+                    f"This is a new chat with Groq model {llm_model}.\n"
+                    "Once you are satisfied with the results, type 'exit' to close the chat."
+                )
 
                 # While loop to handle interactions user-LLM
                 while True:
                     # Retrive LLM's reply
                     response = client.chat.completions.create(
                         model=llm_model,
-                        messages=conversation
+                        messages=conversation.copy()
                     )
 
                     # Extract and display model's reply
@@ -110,18 +149,19 @@ class TextualModel(ProcessModel, ABC):
                     conversation.append({'role': 'assistant', 'content': reply})
 
                     user_input = input("\n\n   You: ")
-                    interaction_counter = interaction_counter + 1
 
-                    if user_input.lower() in ['exit',]:
+                    if user_input.strip().lower() == 'exit':
                         last_reply = reply
                         break
+
+                    conversation.append({'role': 'user', 'content': user_input})
 
             # Without interactions the LLM result should be directly saved into the model 
             else: 
                 # Retrive AI's reply
                 response = client.chat.completions.create(
                     model=llm_model,
-                    messages=conversation
+                    messages=conversation.copy()
                 )
 
                 # Extract and display model's reply
