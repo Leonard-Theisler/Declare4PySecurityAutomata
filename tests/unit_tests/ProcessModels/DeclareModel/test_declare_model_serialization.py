@@ -4,7 +4,7 @@ import sys
 import types
 import unittest
 
-project_root = Path(__file__).resolve().parents[2]
+project_root = Path(__file__).resolve().parents[4]
 declare4py_module = types.ModuleType("Declare4Py")
 declare4py_module.__path__ = [str(project_root / "Declare4Py")]
 process_models_module = types.ModuleType("Declare4Py.ProcessModels")
