@@ -264,6 +264,8 @@ class D4PyEventLog:
             raise RuntimeError("You must load a log before.")
         if not 0 <= min_support <= 1:
             raise RuntimeError("Min. support must be in range [0, 1].")
+        if len_itemset is not None and len_itemset < 1:
+            raise RuntimeError("The parameter len_itemset must be greater than 0.")
 
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -287,17 +289,17 @@ class D4PyEventLog:
         with warnings.catch_warnings():
             warnings.filterwarnings("ignore", category=DeprecationWarning)
             if algorithm == 'fpgrowth':
-                frequent_itemsets = fpgrowth(binary_encoded_log, min_support=min_support, use_colnames=True)
+                frequent_itemsets = fpgrowth(binary_encoded_log, min_support=min_support, use_colnames=True,
+                                             max_len=len_itemset)
             elif algorithm == 'apriori':
-                frequent_itemsets = apriori(binary_encoded_log, min_support=min_support, use_colnames=True)
+                frequent_itemsets = apriori(binary_encoded_log, min_support=min_support, use_colnames=True,
+                                            max_len=len_itemset)
             else:
                 raise RuntimeError(f"{algorithm} algorithm not supported. Choose between fpgrowth and apriori")
 
         frequent_itemsets['length'] = frequent_itemsets['itemsets'].apply(lambda x: len(x))
         if len_itemset is None:
             return frequent_itemsets
-        elif len_itemset < 1:
-            raise RuntimeError(f"The parameter len_itemset must be greater than 0.")
         else:
             return frequent_itemsets[(frequent_itemsets['length'] <= len_itemset)]
 
