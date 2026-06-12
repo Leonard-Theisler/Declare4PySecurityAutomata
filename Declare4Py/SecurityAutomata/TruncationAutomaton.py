@@ -1,4 +1,5 @@
 from typing import Dict, List, Tuple
+import graphviz
 
 class TruncationAutomaton:
     
@@ -10,8 +11,8 @@ class TruncationAutomaton:
         self._states = states
         self._transitions = transitions
 
-        self.currentState: str = None
-        self.outputTrace: List[str] = None
+        self.currentState: str = initial_state
+        self.outputTrace: List[str] = []
 
 
     def canExecuteAction(self, transition: Tuple[str, str]):
@@ -34,12 +35,36 @@ class TruncationAutomaton:
 
     def runTrace(self, trace: List[str]):
         for action in trace:
-            if not self.canExecuteAction(action):
+            if not self.canExecuteAction((action, self.currentState)):
                 print("The action ", action, "is a violation of the security policy. The automaton has truncated the execution.")
                 break
-            self.fireTransition(action)
+            self.fireTransition((action, self.currentState))
 
         print("The output trace is: ")
         for action in self.outputTrace:
             print(action)
 
+    def visualizeAutomaton(self, filename: str):
+        automaton = graphviz.Digraph(comment = "Truncation Automaton")
+        automaton.attr(rankdir='LR')
+        automaton.node("start", label = "", shape = "none")
+
+        for state in self._states:
+            if state.startswith("Q"):
+                label = f'<Q<SUB>{state[1:]}</SUB>>'
+            else:
+                label = state
+            automaton.node(state, label =label, shape = "circle")
+        
+        automaton.edge("start", self._initial_state, headport = "sw")
+
+        for transition in self._transitions:
+            automaton.edge(transition[1], self._transitions[transition], label = transition[0])
+
+        automaton.render(filename, view = True)
+
+    
+
+securityAutomaton = TruncationAutomaton("Qnfr", ["Qnfr", "Qfr"], {("not FileRead", "Qnfr"): "Qnfr", ("FileRead", "Qnfr"): "Qfr", ("not Send", "Qfr"): "Qfr"})
+securityAutomaton.runTrace(["not FileRead", "FileRead", "not Send", "Send"])
+securityAutomaton.visualizeAutomaton("No Send after FileRead")

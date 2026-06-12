@@ -1,0 +1,11 @@
+// Truncation Automaton
+digraph {
+	rankdir=LR
+	start [label="" shape=none]
+	Qnfr [label=<Q<SUB>nfr</SUB>> shape=circle]
+	Qfr [label=<Q<SUB>fr</SUB>> shape=circle]
+	start -> Qnfr [headport=sw]
+	Qnfr -> Qnfr [label="not FileRead"]
+	Qnfr -> Qfr [label=FileRead]
+	Qfr -> Qfr [label="not Send"]
+}
