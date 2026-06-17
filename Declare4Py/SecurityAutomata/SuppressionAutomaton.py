@@ -58,13 +58,13 @@ class SuppressionAutomaton(TruncationAutomaton):
 
             for transition in self._transitions:
                 if transition in self._suppressions and self._suppressions[transition] == "-":
-                    automaton.edge(transition[1], self._transitions[transition], label = transition[0], style="dashed")
+                    automaton.edge(transition[1], self._transitions[transition], label = transition[0], color="red")
                 else:
                     automaton.edge(transition[1], self._transitions[transition], label = transition[0])
 
             automaton.render(filename, view = True)
                 
-suppressionAutomaton = SuppressionAutomaton("Qnfr", ["Qnfr", "Qfr"], {("not FileRead", "Qnfr"): "Qnfr", ("FileRead", "Qnfr"): "Qfr", ("not Send", "Qfr"): "Qfr", ("Send", "Qfr"): "Qfr"}, {("not FileRead", "Qnfr"): "+", ("FileRead", "Qnfr"): "+", ("not Send", "Qfr"): "+", ("Send", "Qfr"): "-"})
-suppressionAutomaton.runTrace(["not FileRead", "FileRead", "not Send", "Send"])
-suppressionAutomaton.visualizeAutomaton("No Send after FileRead with Suppression")
+#suppressionAutomaton = SuppressionAutomaton("Qnfr", ["Qnfr", "Qfr"], {("not FileRead", "Qnfr"): "Qnfr", ("FileRead", "Qnfr"): "Qfr", ("not Send", "Qfr"): "Qfr", ("Send", "Qfr"): "Qfr"}, {("not FileRead", "Qnfr"): "+", ("FileRead", "Qnfr"): "+", ("not Send", "Qfr"): "+", ("Send", "Qfr"): "-"})
+#suppressionAutomaton.runTrace(["not FileRead", "FileRead", "not Send", "Send"])
+#suppressionAutomaton.visualizeAutomaton("No Send after FileRead with Suppression")
                     
