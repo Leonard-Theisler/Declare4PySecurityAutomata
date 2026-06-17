@@ -54,7 +54,7 @@ class TruncationAutomaton:
                 label = f'<Q<SUB>{state[1:]}</SUB>>'
             else:
                 label = state
-            automaton.node(state, label =label, shape = "circle")
+            automaton.node(state, label =label, shape = "circle", fixedsize="true", width="0.8")
         
         automaton.edge("start", self._initial_state, headport = "sw")
 
@@ -65,6 +65,6 @@ class TruncationAutomaton:
 
     
 
-securityAutomaton = TruncationAutomaton("Qnfr", ["Qnfr", "Qfr"], {("not FileRead", "Qnfr"): "Qnfr", ("FileRead", "Qnfr"): "Qfr", ("not Send", "Qfr"): "Qfr"})
-securityAutomaton.runTrace(["not FileRead", "FileRead", "not Send", "Send"])
-securityAutomaton.visualizeAutomaton("No Send after FileRead")
+#securityAutomaton = TruncationAutomaton("Qnfr", ["Qnfr", "Qfr"], {("not FileRead", "Qnfr"): "Qnfr", ("FileRead", "Qnfr"): "Qfr", ("not Send", "Qfr"): "Qfr"})
+#securityAutomaton.runTrace(["not FileRead", "FileRead", "not Send", "Send"])
+#securityAutomaton.visualizeAutomaton("No Send after FileRead")
