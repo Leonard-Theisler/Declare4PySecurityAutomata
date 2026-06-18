@@ -2,6 +2,7 @@ from typing import Dict, List, Tuple
 import graphviz
 from SuppressionAutomaton import SuppressionAutomaton
 from InsertionAutomaton import InsertionAutomaton
+from OutputSequence import OutputSequence
 
 class EditAutomaton(SuppressionAutomaton, InsertionAutomaton):
     
@@ -21,29 +22,28 @@ class EditAutomaton(SuppressionAutomaton, InsertionAutomaton):
         self.outputTrace: List[str] = []
         
     def runTrace(self, trace: List[str]):
+        output = OutputSequence()
         i = 0
         while i < len(trace):
             action = trace[i]
             if not self.canExecuteAction((action, self.currentState)) and not self.canInsertAction((action, self.currentState)):
-                print("The action ", action, "is a violation of the security policy. The automaton has truncated the execution.")
+                output.outputTrace = self.outputTrace
+                output.addTuncation(action, self.currentState, i)
                 break
-            elif self.canInsertAction((action, self.currentState)):                
-                for act in self._insertions[(action, self.currentState)][0]:
-                    print("Inserted action: ", act)
-                    
+            elif self.canInsertAction((action, self.currentState)):  
+                output.addInsertion(self._insertions[(action, self.currentState)][0], self.currentState, i)                                                
                 self.fireInsertTransition((action, self.currentState))
                 continue    
             elif self.suppressAction((action, self.currentState)):
+                output.addSuppression(action, self.currentState, i)
                 self.fireSuppressedTransition((action, self.currentState))
-                print("Suppressed action: ", action)
             else:
                 self.fireTransition((action, self.currentState))
 
             i += 1
-
-        print("The output trace is: ")
-        for action in self.outputTrace:
-            print(action)
+            
+        output.outputTrace = self.outputTrace
+        return output
             
     def visualizeAutomaton(self, filename: str):
         automaton = graphviz.Digraph(comment = "Edit Automaton", engine = "dot")
@@ -71,13 +71,19 @@ class EditAutomaton(SuppressionAutomaton, InsertionAutomaton):
 
         automaton.render(filename, view = True)
         
-# editAutomaton = EditAutomaton("Q0",
-#                               ["Q0", "Q1", "Q2", "Q3"],
-#                               {("show", "Q0"): "Q0", ("board", "Q0"): "Q1", ("show", "Q2"): "Q3", ("show", "Q3"): "Q3"},
-#                               {("show", "Q0"): "+", ("board", "Q0"): "-", ("show", "Q2"): "+", ("show", "Q3"): "+"},
-#                               {("board", "Q1"): (["board","show"], "Q3"), ("show", "Q1"): (["board"], "Q2")})                  
-# editAutomaton.runTrace(["board", "show"]) #board, show
-# editAutomaton.runTrace(["board", "board"]) #board, show
-# editAutomaton.runTrace(["show", "board", "show"]) #show, board, show
+editAutomaton = EditAutomaton("Q0",
+                              ["Q0", "Q1", "Q2", "Q3"],
+                              {("show", "Q0"): "Q0", ("board", "Q0"): "Q1", ("show", "Q2"): "Q3", ("show", "Q3"): "Q3"},
+                              {("show", "Q0"): "+", ("board", "Q0"): "-", ("show", "Q2"): "+", ("show", "Q3"): "+"},
+                              {("board", "Q1"): (["board","show"], "Q3"), ("show", "Q1"): (["board"], "Q2")})                  
+output = editAutomaton.runTrace(["board", "show"]) #board, show
+# output = editAutomaton.runTrace(["board", "board"]) #board, show
+# output = editAutomaton.runTrace(["show", "board", "show"]) #show, board, show
 
 # editAutomaton.visualizeAutomaton("Edit Automaton")
+
+# print(output.traceAcceptance)
+# print(output.outputTrace)
+# print("suppressions: " , output.suppressions)
+# print("insertions: " , output.insertions)
+# print("truncations: ", output.truncation)

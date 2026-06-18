@@ -1,5 +1,6 @@
 from typing import Dict, List, Tuple
 import graphviz
+from OutputSequence import OutputSequence
 from TruncationAutomaton import TruncationAutomaton
 
 class InsertionAutomaton(TruncationAutomaton):
@@ -29,15 +30,15 @@ class InsertionAutomaton(TruncationAutomaton):
         
     def runTrace(self, trace: List[str]):
         i = 0
+        output = OutputSequence()
         while i < len(trace):
             action = trace[i]
             if not self.canExecuteAction((action, self.currentState)) and not self.canInsertAction((action, self.currentState)):
-                print("The action ", action, "is a violation of the security policy. The automaton has truncated the execution.")
+                output.outputTrace = self.outputTrace
+                output.addTuncation(action, self.currentState, i)
                 break
-            elif self.canInsertAction((action, self.currentState)):                
-                for act in self._insertions[(action, self.currentState)][0]:
-                    print("Inserted action: ", act)
-                    
+            elif self.canInsertAction((action, self.currentState)):
+                output.addInsertion(self._insertions[(action, self.currentState)][0], self.currentState, i)                                  
                 self.fireInsertTransition((action, self.currentState))
                 continue    
 
@@ -45,10 +46,10 @@ class InsertionAutomaton(TruncationAutomaton):
                 self.fireTransition((action, self.currentState))
 
             i += 1
+            
+        output.outputTrace = self.outputTrace
+        return output
 
-        print("The output trace is: ")
-        for action in self.outputTrace:
-            print(action)
     
     def visualizeAutomaton(self, filename: str):
         automaton = graphviz.Digraph(comment = "Insertion Automaton", engine = "dot")
@@ -77,5 +78,9 @@ class InsertionAutomaton(TruncationAutomaton):
 #                                         ["Qnfr", "Qfr"], 
 #                                         {("not FileRead", "Qnfr"): "Qnfr", ("FileRead", "Qnfr"): "Qfr", ("not Send", "Qfr"): "Qfr"},
 #                                         {("not FileRead", "Qfr"): (["FileRead"], "Qnfr")})
-# insertionAutomaton.runTrace(["not FileRead", "FileRead", "not Send", "not FileRead"])
+# output = insertionAutomaton.runTrace(["not FileRead", "FileRead", "not Send", "not FileRead"])
 # insertionAutomaton.visualizeAutomaton("No Send after FileRead with insertion")
+
+# print(output.traceAcceptance)
+# print(output.outputTrace)
+# print(output.insertions)

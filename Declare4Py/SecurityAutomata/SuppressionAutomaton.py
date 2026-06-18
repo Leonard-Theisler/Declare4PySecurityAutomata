@@ -1,7 +1,7 @@
 from fileinput import filename
 from typing import Dict, List, Tuple
-
 import graphviz
+from OutputSequence import OutputSequence
 from TruncationAutomaton import TruncationAutomaton
 
 class SuppressionAutomaton(TruncationAutomaton):
@@ -28,19 +28,23 @@ class SuppressionAutomaton(TruncationAutomaton):
             self.currentState = self._transitions[transition]
 
         def runTrace(self, trace: List[str]):
+            output = OutputSequence()
+            index = 0
+
             for action in trace:
                 if not self.canExecuteAction((action, self.currentState)):
-                    print("The action ", action, "is a violation of the security policy. The automaton has truncated the execution.")
+                    output.outputTrace = self.outputTrace
+                    output.addTuncation(action, self.currentState, index)
                     break
                 elif self.suppressAction((action, self.currentState)):
+                    output.addSuppression(action, self.currentState, index)
                     self.fireSuppressedTransition((action, self.currentState))
-                    print("Suppressed action: ", action)
                 else:
                     self.fireTransition((action, self.currentState))
-
-            print("The output trace is: ")
-            for action in self.outputTrace:
-                print(action)
+                index += 1
+                
+            output.outputTrace = self.outputTrace
+            return output        
                 
         def visualizeAutomaton(self, filename: str):
             automaton = graphviz.Digraph(comment = "Suppression Automaton", engine = "dot")
@@ -64,7 +68,10 @@ class SuppressionAutomaton(TruncationAutomaton):
 
             automaton.render(filename, view = True)
                 
-#suppressionAutomaton = SuppressionAutomaton("Qnfr", ["Qnfr", "Qfr"], {("not FileRead", "Qnfr"): "Qnfr", ("FileRead", "Qnfr"): "Qfr", ("not Send", "Qfr"): "Qfr", ("Send", "Qfr"): "Qfr"}, {("not FileRead", "Qnfr"): "+", ("FileRead", "Qnfr"): "+", ("not Send", "Qfr"): "+", ("Send", "Qfr"): "-"})
-#suppressionAutomaton.runTrace(["not FileRead", "FileRead", "not Send", "Send"])
-#suppressionAutomaton.visualizeAutomaton("No Send after FileRead with Suppression")
-                    
+# suppressionAutomaton = SuppressionAutomaton("Qnfr", ["Qnfr", "Qfr"], {("not FileRead", "Qnfr"): "Qnfr", ("FileRead", "Qnfr"): "Qfr", ("not Send", "Qfr"): "Qfr", ("Send", "Qfr"): "Qfr"}, {("not FileRead", "Qnfr"): "+", ("FileRead", "Qnfr"): "+", ("not Send", "Qfr"): "+", ("Send", "Qfr"): "-"})
+# output = suppressionAutomaton.runTrace(["not FileRead", "FileRead", "not Send", "Send"])
+# # suppressionAutomaton.visualizeAutomaton("No Send after FileRead with Suppression")
+
+# print(output.traceAcceptance)
+# print(output.outputTrace)
+# print(output.suppressions)
