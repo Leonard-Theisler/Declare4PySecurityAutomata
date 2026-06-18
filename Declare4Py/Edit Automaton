@@ -1,0 +1,16 @@
+// Edit Automaton
+digraph {
+	rankdir=LR
+	start [label="" shape=none]
+	Q0 [label=<Q<SUB>0</SUB>> fixedsize=true shape=circle width=0.8]
+	Q1 [label=<Q<SUB>1</SUB>> fixedsize=true shape=circle width=0.8]
+	Q2 [label=<Q<SUB>2</SUB>> fixedsize=true shape=circle width=0.8]
+	Q3 [label=<Q<SUB>3</SUB>> fixedsize=true shape=circle width=0.8]
+	start -> Q0 [headport=sw]
+	Q0 -> Q0 [label=show]
+	Q0 -> Q1 [label=board color=red]
+	Q2 -> Q3 [label=show]
+	Q3 -> Q3 [label=show]
+	Q1 -> Q3 [label=board color=blue]
+	Q1 -> Q2 [label=show color=blue]
+}

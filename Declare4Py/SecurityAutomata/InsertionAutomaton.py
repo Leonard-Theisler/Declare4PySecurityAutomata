@@ -67,13 +67,15 @@ class InsertionAutomaton(TruncationAutomaton):
         for transition in self._transitions:
             automaton.edge(transition[1], self._transitions[transition], label = transition[0])
         for insertTransition in self._insertions:
+            #with inserted actions below the edge, looks funky
+            # automaton.edge(insertTransition[1], self._insertions[insertTransition][1], label = insertTransition[0], xlabel = ' ,'.join(self._insertions[insertTransition][0]), color="blue")
             automaton.edge(insertTransition[1], self._insertions[insertTransition][1], label = insertTransition[0], color="blue")
 
         automaton.render(filename, view = True)
                 
-insertionAutomaton = InsertionAutomaton("Qnfr", 
-                                        ["Qnfr", "Qfr"], 
-                                        {("not FileRead", "Qnfr"): "Qnfr", ("FileRead", "Qnfr"): "Qfr", ("not Send", "Qfr"): "Qfr"},
-                                        {("not FileRead", "Qfr"): (["FileRead"], "Qnfr")})
-insertionAutomaton.runTrace(["not FileRead", "FileRead", "not Send", "not FileRead"])
-insertionAutomaton.visualizeAutomaton("No Send after FileRead with insertion")
+# insertionAutomaton = InsertionAutomaton("Qnfr", 
+#                                         ["Qnfr", "Qfr"], 
+#                                         {("not FileRead", "Qnfr"): "Qnfr", ("FileRead", "Qnfr"): "Qfr", ("not Send", "Qfr"): "Qfr"},
+#                                         {("not FileRead", "Qfr"): (["FileRead"], "Qnfr")})
+# insertionAutomaton.runTrace(["not FileRead", "FileRead", "not Send", "not FileRead"])
+# insertionAutomaton.visualizeAutomaton("No Send after FileRead with insertion")
