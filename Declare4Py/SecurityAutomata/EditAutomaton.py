@@ -17,28 +17,48 @@ class EditAutomaton(SuppressionAutomaton, InsertionAutomaton):
         self._transitions = transitions
         self._insertions = insertions
         self._suppressions = suppressions
+        self._buffer = []
 
         self.currentState: str = initial_state
         self.outputTrace: List[str] = []
+        
+    def insertBufferedActions(self):
+        self.outputTrace.extend(self._buffer)
+        self._buffer.clear()
+        
+    def fireInsertTransition(self, transition: Tuple[str, str]):
+        self.currentState = self._insertions[transition][1]
+        
+        for action in self._insertions[transition][0]:
+            if action == "buffer":
+                self.insertBufferedActions()
+            else:
+                self.outputTrace.append(action)
+            
         
     def runTrace(self, trace: List[str]):
         output = OutputSequence()
         i = 0
         while i < len(trace):
             action = trace[i]
-            if not self.canExecuteAction((action, self.currentState)) and not self.canInsertAction((action, self.currentState)):
+            transition = (action, self.currentState)
+            if not self.canExecuteAction(transition) and not self.canInsertAction(transition):
                 output.outputTrace = self.outputTrace
                 output.addTuncation(action, self.currentState, i)
                 break
-            elif self.canInsertAction((action, self.currentState)):  
-                output.addInsertion(self._insertions[(action, self.currentState)][0], self.currentState, i)                                                
-                self.fireInsertTransition((action, self.currentState))
+            elif self.canInsertAction(transition):
+                if self._buffer != []:
+                    output.addBuffer(self._buffer)  
+                    for act in self._insertions[transition][0]:
+                        output.addInsertion(act, self.currentState, i)                                                
+                self.fireInsertTransition(transition)
                 continue    
-            elif self.suppressAction((action, self.currentState)):
+            elif self.suppressAction(transition):
                 output.addSuppression(action, self.currentState, i)
-                self.fireSuppressedTransition((action, self.currentState))
+                self._buffer.append(action)
+                self.fireSuppressedTransition(transition)
             else:
-                self.fireTransition((action, self.currentState))
+                self.fireTransition(transition)
 
             i += 1
             
@@ -76,7 +96,7 @@ editAutomaton = EditAutomaton("Q0",
                               {("show", "Q0"): "Q0", ("board", "Q0"): "Q1", ("show", "Q2"): "Q3", ("show", "Q3"): "Q3"},
                               {("show", "Q0"): "+", ("board", "Q0"): "-", ("show", "Q2"): "+", ("show", "Q3"): "+"},
                               {("board", "Q1"): (["board","show"], "Q3"), ("show", "Q1"): (["board"], "Q2")})                  
-output = editAutomaton.runTrace(["board", "show"]) #board, show
+# output = editAutomaton.runTrace(["board", "show"]) #board, show
 # output = editAutomaton.runTrace(["board", "board"]) #board, show
 # output = editAutomaton.runTrace(["show", "board", "show"]) #show, board, show
 
