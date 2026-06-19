@@ -60,48 +60,48 @@ class SecurityAutomataFactory:
                 return EditAutomaton("Q0", states, transitions, suppressions, insertions)
             case "Responded Existence":
                 states = ["Q0", "Q1", "Q2", "Q3"]
-                transitions = {(actions[0], "Q0"): "Q1", ("!"+actions[1], "Q1"): "Q1", (actions[1], "Q2"): "Q3", ("true", "Q3"): "Q3", (actions[1], "Q0"): "Q3"}
-                suppressions = {(actions[0], "Q0"): "-", ("!"+actions[1], "Q1"): "-", (actions[1], "Q2"): "+", ("true", "Q3"): "+", (actions[1], "Q0"): "+"}
+                transitions = {("!"+ actions[0]+" and !"+actions[1], "Q0"): "Q0",(actions[0], "Q0"): "Q1", ("!"+actions[1], "Q1"): "Q1", (actions[1], "Q2"): "Q3", ("true", "Q3"): "Q3", (actions[1], "Q0"): "Q3"}
+                suppressions = {("!"+ actions[0]+" and !"+actions[1], "Q0"): "+",(actions[0], "Q0"): "-", ("!"+actions[1], "Q1"): "-", (actions[1], "Q2"): "+", ("true", "Q3"): "+", (actions[1], "Q0"): "+"}
                 insertions ={(actions[1], "Q1"): (["buffer"], "Q2")}
                 return EditAutomaton("Q0", states, transitions, suppressions, insertions)
             case "Response": #buffer
                 states = ["Q0", "Q1", "Q2"]
-                transitions = {(actions[1], "Q0"): "Q0", (actions[0], "Q0"): "Q1", ("!"+actions[1], "Q1"): "Q1", (actions[1], "Q2"): "Q0"}
-                suppressions = {(actions[1], "Q0"): "+", (actions[0], "Q0"): "-", ("!"+actions[1], "Q1"): "-", (actions[1], "Q2"): "+"}
+                transitions = {("!" + actions[0], "Q0"): "Q0", (actions[1], "Q0"): "Q0", (actions[0], "Q0"): "Q1", ("!"+actions[1], "Q1"): "Q1", (actions[1], "Q2"): "Q0"}
+                suppressions = {("!" + actions[0], "Q0"): "+",(actions[1], "Q0"): "+", (actions[0], "Q0"): "-", ("!"+actions[1], "Q1"): "-", (actions[1], "Q2"): "+"}
                 insertions = {(actions[1], "Q1"): (["buffer"], "Q2")}
                 return EditAutomaton("Q0", states, transitions, suppressions, insertions)
             case "Alternate Response": #buffer
                 states = ["Q0", "Q1", "Q2"]
-                transitions = {("!"+actions[0], "Q0"): "Q0", (actions[0], "Q0"): "Q1", (actions[1], "Q2"): "Q0"}
-                suppressions = {("!"+actions[0], "Q0"): "+", (actions[0], "Q0"): "-", (actions[1], "Q2"): "+"}
+                transitions = {("!"+ actions[0]+" and !"+actions[1], "Q1"): "Q1", (actions[0]+" and "+actions[1], "Q1"): "Q1",("!"+actions[0], "Q0"): "Q0", (actions[0], "Q0"): "Q1", (actions[1], "Q2"): "Q0"}
+                suppressions = {("!"+ actions[0]+" and !"+actions[1], "Q1"): "+", (actions[0]+" and "+actions[1], "Q1"): "+", ("!"+actions[0], "Q0"): "+", (actions[0], "Q0"): "-", (actions[1], "Q2"): "+"}
                 insertions = {(actions[1], "Q1"): (["buffer"], "Q2"), (actions[0], "Q1"): (["buffer", actions[1]], "Q0")}
                 return EditAutomaton("Q0", states, transitions, suppressions, insertions)
-            case "Chain Response":
+            case "Chain Response": #buffer
                 states = ["Q0", "Q1", "Q2"] 
-                transitions = {("!"+actions[0], "Q0"): "Q0", (actions[0], "Q0"): "Q1", (actions[1], "Q2"): "Q0"}
-                suppressions = {("!"+actions[0], "+"): "Q0", (actions[0], "Q0"): "-"}
+                transitions = {(actions[0]+" and "+actions[1], "Q1"): "Q1",("!"+actions[0], "Q0"): "Q0", (actions[0], "Q0"): "Q1", (actions[1], "Q2"): "Q0"}
+                suppressions = {(actions[0]+" and "+actions[1], "Q1"): "-", ("!"+actions[0], "Q0"): "+", (actions[0], "Q0"): "-"}
                 insertions = {("!"+actions[1], "Q1"): ([actions[0], actions[1]], "Q0"), (actions[1], "Q1"): ([actions[0]], "Q2")}
                 return EditAutomaton("Q0", states, transitions, suppressions, insertions)
             case "Precedence":
                 states = ["Q0", "Q1"]
-                transitions = {(actions[1], "Q0"): "Q1", ("True", "Q1"): "Q1"}
-                suppressions = {(actions[1], "Q0"): "+", ("True", "Q1"): "+"}
+                transitions = {("!"+actions[0]+" and !"+actions[1], "Q0"): "Q0",(actions[1], "Q0"): "Q1", ("True", "Q1"): "Q1"}
+                suppressions = {("!"+actions[0]+" and !"+actions[1], "Q0"): "+",(actions[1], "Q0"): "+", ("True", "Q1"): "+"}
                 insertions = {(actions[0], "Q0"): ([actions[1]], "Q1")}
                 return EditAutomaton("Q0", states, transitions, suppressions, insertions)
             case "Alternate Precedence":
-                states = ["Q0", "Q1", "Q2", "Q3"] 
-                transitions = {(actions[1], "Q0"): "Q1", ("!"+actions[0], "Q1"): "Q1", (actions[0], "Q1"): "Q2", (actions[1], "Q3"): "Q1"}
-                suppressions = {(actions[1], "Q0"): "+", ("!"+actions[0], "Q1"): "+", (actions[0], "Q1"): "-", (actions[1], "Q3"): "+"}
-                insertions = {(actions[1], "Q2"): ([actions[0]], "Q3")}
+                states = ["Q0", "Q1", "Q2", "Q3", "Q4"] 
+                transitions = {("!"+actions[0]+" and !"+actions[1], "Q4"): "Q0",(actions[0]+" and "+actions[1], "Q0"): "Q2",("!"+actions[0]+" and !"+actions[1], "Q0"): "Q0",(actions[1], "Q0"): "Q1", ("!"+actions[0], "Q1"): "Q1", (actions[0], "Q1"): "Q2", (actions[1], "Q3"): "Q1"}
+                suppressions = {("!"+actions[0]+" and !"+actions[1], "Q4"): "+",(actions[0]+" and "+actions[1], "Q0"): "-",("!"+actions[0]+" and !"+actions[1], "Q0"): "+",(actions[1], "Q0"): "+", ("!"+actions[0], "Q1"): "+", (actions[0], "Q1"): "-", (actions[1], "Q3"): "+"}
+                insertions = {(actions[1], "Q2"): ([actions[0]], "Q3"),("!"+actions[0]+" and !"+actions[1], "Q2"): ([actions[0]+" and "+actions[1]], "Q4")}
                 return EditAutomaton("Q0", states, transitions, suppressions, insertions)
             case "Chain Precedence":
                 states = ["Q0", "Q1"]
-                transitions = {(actions[1], "Q0"): "Q0", ("!"+actions[1], "Q0"): "Q1", (actions[1], "Q1"): "Q0"}
+                transitions = {("!"+actions[0]+" and !"+actions[1], "Q1"): "Q1", (actions[1], "Q0"): "Q0", ("!"+actions[1], "Q0"): "Q1", (actions[1], "Q1"): "Q0"}
                 insertions = {(actions[0], "Q1"): ([actions[1]], "Q0")}
                 return InsertionAutomaton("Q0", states, transitions, insertions)
             case "Not Responded Existence":
                 states = ["Q0", "Q1", "Q2"]
-                transitions = {(actions[0], "Q0"): "Q2", (actions[1], "Q0"): "Q1", ("!"+actions[1], "Q2"): "Q2", ("!"+actions[0], "Q1"): "Q1", ("!"+actions[0]+" and !"+actions[1], "Q0"): "Q0"}
+                transitions = {("!"+actions[0]+" and !"+actions[1], "Q0"): "Q0",(actions[0], "Q0"): "Q2", (actions[1], "Q0"): "Q1", ("!"+actions[1], "Q2"): "Q2", ("!"+actions[0], "Q1"): "Q1", ("!"+actions[0]+" and !"+actions[1], "Q0"): "Q0"}
                 return TruncationAutomaton("Q0", states, transitions)
             case "Not Response":
                 states = ["Q0", "Q1"]
@@ -131,5 +131,5 @@ factory = SecurityAutomataFactory()
 # for label, automaton in automata.items():
 #     automaton.visualizeAutomaton(label)
 
-aut = factory.generateAutomatonFromTemplate("Not Precedence", ["x", "y"])
-aut.visualizeAutomaton("Not Precedence x y")
+aut = factory.generateAutomatonFromTemplate("Not Responded Existence", ["x", "y"])
+aut.visualizeAutomaton("Not Responded Existence x y")
