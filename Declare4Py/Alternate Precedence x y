@@ -8,6 +8,7 @@ digraph {
 	Q3 [label=<Q<SUB>3</SUB>> fixedsize=true shape=circle width=0.8]
 	Q4 [label=<Q<SUB>4</SUB>> fixedsize=true shape=circle width=0.8]
 	start -> Q0 [headport=sw]
+	Q2 -> Q2 [label="x and y" color=red]
 	Q4 -> Q0 [label="!x and !y"]
 	Q0 -> Q2 [label="x and y" color=red]
 	Q0 -> Q0 [label="!x and !y"]
@@ -17,4 +18,6 @@ digraph {
 	Q3 -> Q1 [label=y]
 	Q2 -> Q3 [label=y color=blue]
 	Q2 -> Q4 [label="!x and !y" color=blue]
+	label="(y, Q2) -> (['buffer'], Q3)
+(!x and !y, Q2) -> (['buffer'], Q4)" labelloc=b
 }
