@@ -1,0 +1,13 @@
+// Insertion Automaton
+digraph {
+	rankdir=LR
+	start [label="" shape=none]
+	Q0 [label=<Q<SUB>0</SUB>> fixedsize=true shape=circle width=0.8]
+	Q1 [label=<Q<SUB>1</SUB>> fixedsize=true shape=circle width=0.8]
+	start -> Q0 [headport=sw]
+	Q0 -> Q1 [label=x]
+	Q0 -> Q0 [label="!x"]
+	Q1 -> Q1 [label=x]
+	Q1 -> Q0 [label="!x and !y"]
+	Q1 -> Q0 [label=y color=blue]
+}
