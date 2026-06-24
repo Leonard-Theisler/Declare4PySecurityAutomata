@@ -29,8 +29,14 @@ class SuppressionAutomaton(TruncationAutomaton):
 
         def runTrace(self, trace: List[str]):
             output = OutputSequence()
+            self.currentState = self._initial_state
+            self.outputTrace = []
+            
+            if trace == [""]:
+                output.outputTrace = trace
+                return output
+            
             index = 0
-
             for action in trace:
                 if not self.canExecuteAction((action, self.currentState)):
                     output.outputTrace = self.outputTrace

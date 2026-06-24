@@ -96,7 +96,7 @@ class SecurityAutomataFactory:
                 return EditAutomaton("Q0", states, transitions, suppressions, insertions)
             case "Chain Precedence":
                 states = ["Q0", "Q1"]
-                transitions = {("!"+actions[0]+" and !"+actions[1], "Q1"): "Q1", (actions[1], "Q0"): "Q0", ("!"+actions[1], "Q0"): "Q1", (actions[1], "Q1"): "Q0"}
+                transitions = {("!"+actions[0]+" and !"+actions[1], "Q1"): "Q1", (actions[1], "Q0"): "Q0", (actions[0], "Q0"): "Q1", (actions[1], "Q1"): "Q0"}
                 insertions = {(actions[0], "Q1"): ([actions[1]], "Q0")}
                 return InsertionAutomaton("Q0", states, transitions, insertions)
             case "Not Responded Existence":
@@ -123,7 +123,7 @@ class SecurityAutomataFactory:
                 return InsertionAutomaton("Q0", states, transitions, insertions)
             
         
-factory = SecurityAutomataFactory()
+# factory = SecurityAutomataFactory()
 # model_path = os.path.join(os.path.dirname(__file__), "data-model2.decl")
 # automata = factory.generateAutomataFromFile(model_path)
 
@@ -131,11 +131,11 @@ factory = SecurityAutomataFactory()
 # for label, automaton in automata.items():
 #     automaton.visualizeAutomaton(label)
 
-aut = factory.generateAutomatonFromTemplate("Alternate Precedence", ["x", "y"])
+# aut = factory.generateAutomatonFromTemplate("Alternate Precedence", ["x", "y"])
 # output = aut.runTrace(["y", "!x", "x", "x and y", "y"])
 # print(output.traceAcceptance)
 # print(output.outputTrace)
 # print("suppressions: ", output.suppressions)
 # print("insertions: ", output.insertions)
 # print("buffer: ", output.buffer)
-aut.visualizeAutomaton("Alternate Precedence x y")
+# aut.visualizeAutomaton("Alternate Precedence x y")

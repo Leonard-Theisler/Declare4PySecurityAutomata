@@ -18,6 +18,4 @@ digraph {
 	Q3 -> Q1 [label=y]
 	Q2 -> Q3 [label=y color=blue]
 	Q2 -> Q4 [label="!x and !y" color=blue]
-	label="(y, Q2) -> (['buffer'], Q3)
-(!x and !y, Q2) -> (['buffer'], Q4)" labelloc=b
 }

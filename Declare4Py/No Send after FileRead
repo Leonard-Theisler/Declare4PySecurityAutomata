@@ -2,10 +2,10 @@
 digraph {
 	rankdir=LR
 	start [label="" shape=none]
-	Qnfr [label=<Q<SUB>nfr</SUB>> fixedsize=true shape=circle width=0.8]
-	Qfr [label=<Q<SUB>fr</SUB>> fixedsize=true shape=circle width=0.8]
-	start -> Qnfr [headport=sw]
-	Qnfr -> Qnfr [label="not FileRead"]
-	Qnfr -> Qfr [label=FileRead]
-	Qfr -> Qfr [label="not Send"]
+	Q0 [label=<Q<SUB>0</SUB>> fixedsize=true shape=circle width=0.8]
+	Q1 [label=<Q<SUB>1</SUB>> fixedsize=true shape=circle width=0.8]
+	start -> Q0 [headport=sw]
+	Q0 -> Q1 [label=FileRead]
+	Q0 -> Q0 [label="!FileRead"]
+	Q1 -> Q1 [label="!Send"]
 }

@@ -29,8 +29,15 @@ class InsertionAutomaton(TruncationAutomaton):
             self.outputTrace.append(action)
         
     def runTrace(self, trace: List[str]):
-        i = 0
         output = OutputSequence()
+        self.currentState = self._initial_state
+        self.outputTrace = []        
+        
+        if trace == [""]:
+            output.outputTrace = trace
+            return output
+        
+        i = 0
         while i < len(trace):
             action = trace[i]
             if not self.canExecuteAction((action, self.currentState)) and not self.canInsertAction((action, self.currentState)):

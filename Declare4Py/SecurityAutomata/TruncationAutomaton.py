@@ -36,6 +36,13 @@ class TruncationAutomaton:
 
     def runTrace(self, trace: List[str]):
         output = OutputSequence()
+        self.currentState = self._initial_state
+        self.outputTrace = []
+        
+        if trace == [""]:
+            output.outputTrace = trace
+            return output
+        
         index = 0
         for action in trace:
             if not self.canExecuteAction((action, self.currentState)):
@@ -45,6 +52,7 @@ class TruncationAutomaton:
             self.fireTransition((action, self.currentState))
             index += 1
 
+        output.outputTrace = self.outputTrace
         return output
 
     def visualizeAutomaton(self, filename: str):

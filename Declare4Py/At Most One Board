@@ -1,13 +1,11 @@
-// Insertion Automaton
+// Truncation Automaton
 digraph {
 	rankdir=LR
 	start [label="" shape=none]
 	Q0 [label=<Q<SUB>0</SUB>> fixedsize=true shape=circle width=0.8]
 	Q1 [label=<Q<SUB>1</SUB>> fixedsize=true shape=circle width=0.8]
 	start -> Q0 [headport=sw]
-	Q1 -> Q1 [label="!i and !a"]
-	Q0 -> Q0 [label=a]
-	Q0 -> Q1 [label=i]
-	Q1 -> Q0 [label=a]
-	Q1 -> Q0 [label=i color=blue]
+	Q0 -> Q0 [label="!Board"]
+	Q0 -> Q1 [label=Board]
+	Q1 -> Q1 [label="!Board"]
 }

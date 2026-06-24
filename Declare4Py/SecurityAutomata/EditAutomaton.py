@@ -37,7 +37,15 @@ class EditAutomaton(SuppressionAutomaton, InsertionAutomaton):
             
         
     def runTrace(self, trace: List[str]):
-        output = OutputSequence()
+        output = OutputSequence()        
+        self.currentState = self._initial_state
+        self.outputTrace = []
+        self._buffer = []
+        
+        if trace == [""]:
+            output.outputTrace = trace
+            return output
+        
         i = 0
         while i < len(trace):
             action = trace[i]
@@ -89,18 +97,18 @@ class EditAutomaton(SuppressionAutomaton, InsertionAutomaton):
             #with inserted actions below the edge, looks funky
             # automaton.edge(insertTransition[1], self._insertions[insertTransition][1], label = insertTransition[0], xlabel = ' ,'.join(self._insertions[insertTransition][0]), color="blue")
             automaton.edge(insertTransition[1], self._insertions[insertTransition][1], label = insertTransition[0],  color="blue")
-            bottom_lines.append(
-            f"({', '.join(insertTransition)}) -> ({self._insertions[insertTransition][0]}, {self._insertions[insertTransition][1]})"
-            )
-        automaton.attr(label="\n".join(bottom_lines),labelloc="b")
+        #     bottom_lines.append(
+        #     f"({', '.join(insertTransition)}) -> ({self._insertions[insertTransition][0]}, {self._insertions[insertTransition][1]})"
+        #     )
+        # automaton.attr(label="\n".join(bottom_lines),labelloc="b")
 
         automaton.render(filename, view = True)
         
-editAutomaton = EditAutomaton("Q0",
-                              ["Q0", "Q1", "Q2", "Q3"],
-                              {("show", "Q0"): "Q0", ("board", "Q0"): "Q1", ("show", "Q2"): "Q3", ("show", "Q3"): "Q3"},
-                              {("show", "Q0"): "+", ("board", "Q0"): "-", ("show", "Q2"): "+", ("show", "Q3"): "+"},
-                              {("board", "Q1"): (["board","show"], "Q3"), ("show", "Q1"): (["board"], "Q2")})                  
+# editAutomaton = EditAutomaton("Q0",
+#                               ["Q0", "Q1", "Q2", "Q3"],
+#                               {("show", "Q0"): "Q0", ("board", "Q0"): "Q1", ("show", "Q2"): "Q3", ("show", "Q3"): "Q3"},
+#                               {("show", "Q0"): "+", ("board", "Q0"): "-", ("show", "Q2"): "+", ("show", "Q3"): "+"},
+#                               {("board", "Q1"): (["board","show"], "Q3"), ("show", "Q1"): (["board"], "Q2")})                  
 # output = editAutomaton.runTrace(["board", "show"]) #board, show
 # output = editAutomaton.runTrace(["board", "board"]) #board, show
 # output = editAutomaton.runTrace(["show", "board", "show"]) #show, board, show
