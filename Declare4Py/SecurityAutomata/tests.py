@@ -23,7 +23,8 @@ def example1():
     print("Output Trace: ", violating_input.outputTrace)
     print("Suppressions: ", violating_input.suppressions,
         " Insertions: ", violating_input.insertions,
-        " Buffer: ", violating_input.buffer)
+        " Buffer: ", violating_input.buffer,
+        "Truncations: ", violating_input.truncation)
     
     
 # Example 2: Show immediately before board
@@ -31,7 +32,7 @@ def example1():
 # In Declare: ChainPrecedence(Board, Show)
 def example2():
     aut = factory.generateAutomatonFromTemplate("Chain Precedence", ["Board", "Show"])
-    # aut.visualizeAutomaton("Show immediately before Board")
+    aut.visualizeAutomaton("Show immediately before Board")
         
     compliant_input = aut.runTrace(["Board", "Show", "Board"])
     print("Compliance: ", compliant_input.traceAcceptance)
@@ -87,18 +88,18 @@ def example5():
     chainPrecedence = factory.generateAutomatonFromTemplate("Chain Precedence", ["Board", "Show"])
     atMostOne = factory.generateAutomatonFromTemplate("At Most One", ["Board"])
     
-    # inputA = ["Show", "Board"]
-    # outputA = chainPrecedence.runTrace(inputA)
-    # # print(outputA.outputTrace)
+    inputA = ["Show", "Board"]
+    outputA = chainPrecedence.runTrace(inputA)
+    # print(outputA.outputTrace)
     
-    # inputB = ["!Board" if x != "Board" else x for x in outputA.outputTrace]
-    # outputB = atMostOne.runTrace(inputB)
-    # outputB.outputTrace = ["Show" if x == "!Board" else x for x in outputB.outputTrace]
-    # print("Compliance: ", outputB.traceAcceptance)
-    # print("Output Trace: ", outputB.outputTrace)
-    # print("Suppressions: ", outputB.suppressions,
-    #     " Insertions: ", outputB.insertions,
-    #     " Buffer: ", outputB.buffer)
+    inputB = ["!Board" if x != "Board" else x for x in outputA.outputTrace]
+    outputB = atMostOne.runTrace(inputB)
+    outputB.outputTrace = ["Show" if x == "!Board" else x for x in outputB.outputTrace]
+    print("Compliance: ", outputB.traceAcceptance)
+    print("Output Trace: ", outputB.outputTrace)
+    print("Suppressions: ", outputB.suppressions,
+        " Insertions: ", outputB.insertions,
+        " Buffer: ", outputB.buffer)
     
     
     inputAEdited = ["Show", "Board", "Board"]
@@ -113,7 +114,7 @@ def example5():
     print("Suppressions: ", outputBEdited.suppressions,
         " Insertions: ", outputBEdited.insertions,
         " Buffer: ", outputBEdited.buffer)
-example5()
+example2()
 
     
     
