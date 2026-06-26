@@ -92,7 +92,7 @@ class EditAutomaton(SuppressionAutomaton, InsertionAutomaton):
                 automaton.edge(transition[1], self._transitions[transition], label = transition[0], color="red")
             else:
                 automaton.edge(transition[1], self._transitions[transition], label = transition[0])
-        bottom_lines = []
+        # bottom_lines = []
         for insertTransition in self._insertions:
             #with inserted actions below the edge, looks funky
             # automaton.edge(insertTransition[1], self._insertions[insertTransition][1], label = insertTransition[0], xlabel = ' ,'.join(self._insertions[insertTransition][0]), color="blue")

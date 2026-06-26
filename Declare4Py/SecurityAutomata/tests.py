@@ -114,7 +114,6 @@ def example5():
     print("Suppressions: ", outputBEdited.suppressions,
         " Insertions: ", outputBEdited.insertions,
         " Buffer: ", outputBEdited.buffer)
-example2()
 
     
     
