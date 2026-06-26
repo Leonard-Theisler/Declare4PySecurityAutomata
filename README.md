@@ -1,3 +1,7 @@
+This repository extends Declare4Py with security automata. It serves as the implementation part of my master's thesis, "Investigating temporal logic based approaches for security automata" at DTU.
+
+The complete README for Declare4Py is shown below.
+
 # Declare4Py
 
 Declare4Py is the first Python package for declarative Process Mining with core functionalities to 
@@ -46,6 +50,7 @@ docker run -v "%cd%:/home/default" whitemech/lydia lydia %*
 
 
 ## Tutorials
+
 The `docs/source/tutorials/` folder contains a walk-through of Declare4Py. In order, the tutorials cover the following topics:
 
 1. [Managing event logs](https://github.com/ivanDonadello/Declare4Py/blob/main/docs/source/tutorials/1.Managing_Event_Logs.ipynb): methods to manage event logs, importing them, extracting useful information, converting them in other formats;
