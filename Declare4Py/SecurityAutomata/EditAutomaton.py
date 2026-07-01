@@ -58,7 +58,7 @@ class EditAutomaton(SuppressionAutomaton, InsertionAutomaton):
                 if self._buffer != []:
                     output.addBuffer(self._buffer)  
                     for act in self._insertions[transition][0]:
-                        output.addInsertion(act, self.currentState, i)                                                
+                        output.addInsertion(act, self.currentState, i)
                 self.fireInsertTransition(transition)
                 continue    
             elif self.suppressAction(transition):

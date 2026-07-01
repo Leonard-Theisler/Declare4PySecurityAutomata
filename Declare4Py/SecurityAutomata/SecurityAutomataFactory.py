@@ -37,7 +37,7 @@ class SecurityAutomataFactory:
               
     def generateAutomatonFromTemplate(self, template: str, actions: List[str]):
         match template:
-            case "At Least One": #TODO implement buffer case in insert/edit automaton
+            case "At Least One": #buffer
                 states = ["Q0", "Q1", "Q2"]
                 transitions = {("!"+actions[0], "Q0"): "Q0", (actions[0], "Q1"): "Q2"}
                 suppressions = {("!"+actions[0], "Q0"): "-", (actions[0], "Q1"): "+"}
@@ -96,7 +96,7 @@ class SecurityAutomataFactory:
                 return EditAutomaton("Q0", states, transitions, suppressions, insertions)
             case "Chain Precedence":
                 states = ["Q0", "Q1"]
-                transitions = {("!"+actions[0]+" and !"+actions[1], "Q1"): "Q1", (actions[1], "Q0"): "Q0", ("!"+actions[1], "Q0"): "Q1", (actions[1], "Q1"): "Q0"}
+                transitions = {("!"+actions[0]+" and !"+actions[1], "Q1"): "Q1", (actions[1], "Q0"): "Q0", (actions[0], "Q0"): "Q1", (actions[1], "Q1"): "Q0"}
                 insertions = {(actions[0], "Q1"): ([actions[1]], "Q0")}
                 return InsertionAutomaton("Q0", states, transitions, insertions)
             case "Not Responded Existence":
@@ -131,11 +131,11 @@ factory = SecurityAutomataFactory()
 # for label, automaton in automata.items():
 #     automaton.visualizeAutomaton(label)
 
-aut = factory.generateAutomatonFromTemplate("Chain Precedence", ["x", "y"])
+# aut = factory.generateAutomatonFromTemplate("Chain Precedence", ["x", "y"])
 # output = aut.runTrace(["y", "!x", "x", "x and y", "y"])
 # print(output.traceAcceptance)
 # print(output.outputTrace)
 # print("suppressions: ", output.suppressions)
 # print("insertions: ", output.insertions)
 # print("buffer: ", output.buffer)
-aut.visualizeAutomaton("Chain Precedence x y")
+# aut.visualizeAutomaton("Chain Precedence x y")

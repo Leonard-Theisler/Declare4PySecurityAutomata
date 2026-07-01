@@ -81,3 +81,4 @@ class SuppressionAutomaton(TruncationAutomaton):
 # print(output.traceAcceptance)
 # print(output.outputTrace)
 # print(output.suppressions)
+
