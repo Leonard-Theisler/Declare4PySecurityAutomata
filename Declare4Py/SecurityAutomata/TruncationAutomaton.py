@@ -1,12 +1,12 @@
 from typing import Dict, List, Tuple
 import graphviz
-from OutputSequence import OutputSequence
+from .OutputSequence import OutputSequence
 
 class TruncationAutomaton:
     
     def __init__(self, initial_state: str,
                  states: List[str],
-                 transitions: dict[Tuple[str,str], str]):
+                 transitions: Dict[Tuple[str, str], str]):
         
         self._initial_state: str= initial_state
         self._states = states

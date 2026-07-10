@@ -1,13 +1,13 @@
 from typing import Dict, List, Tuple
 import graphviz
-from OutputSequence import OutputSequence
-from TruncationAutomaton import TruncationAutomaton
+from .OutputSequence import OutputSequence
+from .TruncationAutomaton import TruncationAutomaton
 
 class InsertionAutomaton(TruncationAutomaton):
     def __init__(self, initial_state: str,
                  states: List[str],
-                 transitions: dict[Tuple[str,str], str],
-                 insertions: dict[Tuple[str, str,], Tuple[List[str], str]]):
+                 transitions: Dict[Tuple[str, str], str],
+                 insertions: Dict[Tuple[str, str], Tuple[List[str], str]]):
         
             self._initial_state: str= initial_state
             self._states = states

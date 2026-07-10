@@ -1,16 +1,16 @@
 from typing import Dict, List, Tuple
 import graphviz
-from SuppressionAutomaton import SuppressionAutomaton
-from InsertionAutomaton import InsertionAutomaton
-from OutputSequence import OutputSequence
+from .SuppressionAutomaton import SuppressionAutomaton
+from .InsertionAutomaton import InsertionAutomaton
+from .OutputSequence import OutputSequence
 
 class EditAutomaton(SuppressionAutomaton, InsertionAutomaton):
     
     def __init__(self, initial_state: str,
                  states: List[str],
-                 transitions: dict[Tuple[str, str], str],
-                 suppressions: dict[Tuple[str, str], str],
-                 insertions: dict[Tuple[str, str], Tuple[List[str], str]]):
+                 transitions: Dict[Tuple[str, str], str],
+                 suppressions: Dict[Tuple[str, str], str],
+                 insertions: Dict[Tuple[str, str], Tuple[List[str], str]]):
         
         self._initial_state: str= initial_state
         self._states = states

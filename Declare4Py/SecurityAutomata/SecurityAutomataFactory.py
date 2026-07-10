@@ -1,17 +1,16 @@
 from Declare4Py.ProcessModels.DeclareModel import DeclareModel, DeclareModelTemplate
 import os
-from typing import List
-from InsertionAutomaton import InsertionAutomaton
-from SuppressionAutomaton import SuppressionAutomaton 
-from TruncationAutomaton import TruncationAutomaton
-from EditAutomaton import EditAutomaton
+from typing import Dict, List
+from .InsertionAutomaton import InsertionAutomaton
+from .TruncationAutomaton import TruncationAutomaton
+from .EditAutomaton import EditAutomaton
 
 class SecurityAutomataFactory:
     
     def generateAutomataFromFile(self, filepath):
-        constraints: dict[str, List[str]] = self.createProcessDictFromPath(filepath)
+        constraints: Dict[str, List[str]] = self.createProcessDictFromPath(filepath)
         
-        automata: dict[str, object] = {}
+        automata: Dict[str, object] = {}
         for template, actions in constraints.items():
             constraint = template + "(" + ",".join(action for action in actions)+")"
             automata[constraint] = self.generateAutomatonFromTemplate(template, actions)
@@ -139,3 +138,24 @@ factory = SecurityAutomataFactory()
 # print("insertions: ", output.insertions)
 # print("buffer: ", output.buffer)
 # aut.visualizeAutomaton("Chain Precedence x y")
+
+
+# atmost = SuppressionAutomaton("Q0",
+#         ["Q0", "Q1"],
+#         {("!x", "Q0"): "Q0", ("x", "Q0"): "Q1", ("!x", "Q1"): "Q1", ("x", "Q1"): "Q1"},
+#         {("!x", "Q0"): "+", ("x", "Q0"): "+", ("!x", "Q1"): "+", ("x", "Q1"): "-"})
+
+# notResp = SuppressionAutomaton("R0",
+#     ["R0", "R1"],
+#     {("x", "R0"): "R1", ("!x", "R0"): "R0", ("!y", "R1"): "R1", ("y", "R1"): "R1"},
+#     {("x", "R0"): "+", ("!x", "R0"): "+", ("!y", "R1"): "+", ("y", "R1"): "-"}
+
+#     )
+
+# comp = SuppressionAutomaton("Q0R0",
+#     ["Q0R0", "Q1R1"],
+#     {("x", "Q0R0"): "Q1R1", ("!x", "Q0R0"): "Q0R0", ("!x", "Q1R1"): "Q1R1", ("x", "Q1R1"): "Q1R1"},
+#     {("x", "Q0R0"): "+", ("!x", "Q0R0"): "+", ("!x", "Q1R1"): "-", ("x", "Q1R1"): "-"}
+#     )
+
+# comp.visualizeAutomaton("composition suppression")
