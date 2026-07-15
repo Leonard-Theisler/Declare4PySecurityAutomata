@@ -1,4 +1,6 @@
-This repository extends Declare4Py with security automata. It serves as the implementation part of my master's thesis, "Investigating temporal logic based approaches for security automata" at DTU.
+This repository extends Declare4Py with security automata. It serves as the implementation part of my master's thesis, "Investigating temporal logic based approaches for security automata" at Denmark's Technical University.
+
+This repository is a fork of Declare4Py, and contains all of Declare4py's code at the time of forking. The extension that was implemented as a part of my thesis can be found under Declare4Py/SecurityAutomata. The dependencies are the same as that of Declare4Py, with the exception of Graphviz, which requires its executable to be installed on the machine running the code. The relevant excutables can be downloaded here: https://graphviz.org/download/
 
 The complete README for Declare4Py is shown below.
 
