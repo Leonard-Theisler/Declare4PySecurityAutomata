@@ -1,9 +1,9 @@
 from Declare4Py.ProcessModels.DeclareModel import DeclareModel, DeclareModelTemplate
 import os
 from typing import Dict, List
-from .InsertionAutomaton import InsertionAutomaton
-from .TruncationAutomaton import TruncationAutomaton
-from .EditAutomaton import EditAutomaton
+from InsertionAutomaton import InsertionAutomaton
+from TruncationAutomaton import TruncationAutomaton
+from EditAutomaton import EditAutomaton
 
 class SecurityAutomataFactory:
     

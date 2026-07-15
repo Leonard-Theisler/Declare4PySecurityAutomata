@@ -1,4 +1,4 @@
-from .SecurityAutomataFactory import SecurityAutomataFactory
+from SecurityAutomataFactory import SecurityAutomataFactory
 import os
 
 #Tests and example scenarios for usage of SecurityAutomata package
@@ -9,7 +9,7 @@ factory = SecurityAutomataFactory()
 # In Declare: Not Response(FileRead, Send)
 def example1():
     aut = factory.generateAutomatonFromTemplate("Not Response", ["FileRead", "Send"])
-    aut.visualizeAutomaton("No Send after FileRead")
+    # aut.visualizeAutomaton("No Send after FileRead")
 
     compliant_input = aut.runTrace(["!FileRead", "FileRead", "!Send", "!Send"])
     print("Compliance: ", compliant_input.traceAcceptance)
@@ -141,5 +141,5 @@ def example6():
         "Truncations: ", outputBEdited.truncation)
 
 if __name__ == "__main__":
-    example4()
+    example6()
     

@@ -1,6 +1,6 @@
 from typing import Dict, List, Tuple
 import graphviz
-from .OutputSequence import OutputSequence
+from OutputSequence import OutputSequence
 
 class TruncationAutomaton:
     

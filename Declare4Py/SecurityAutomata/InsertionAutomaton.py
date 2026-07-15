@@ -1,7 +1,7 @@
 from typing import Dict, List, Tuple
 import graphviz
-from .OutputSequence import OutputSequence
-from .TruncationAutomaton import TruncationAutomaton
+from OutputSequence import OutputSequence
+from TruncationAutomaton import TruncationAutomaton
 
 class InsertionAutomaton(TruncationAutomaton):
     def __init__(self, initial_state: str,

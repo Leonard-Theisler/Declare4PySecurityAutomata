@@ -1,8 +1,8 @@
 from fileinput import filename
 from typing import Dict, List, Tuple
 import graphviz
-from .OutputSequence import OutputSequence
-from .TruncationAutomaton import TruncationAutomaton
+from OutputSequence import OutputSequence
+from TruncationAutomaton import TruncationAutomaton
 
 class SuppressionAutomaton(TruncationAutomaton):
 

@@ -1,8 +1,8 @@
 from typing import Dict, List, Tuple
 import graphviz
-from .SuppressionAutomaton import SuppressionAutomaton
-from .InsertionAutomaton import InsertionAutomaton
-from .OutputSequence import OutputSequence
+from SuppressionAutomaton import SuppressionAutomaton
+from InsertionAutomaton import InsertionAutomaton
+from OutputSequence import OutputSequence
 
 class EditAutomaton(SuppressionAutomaton, InsertionAutomaton):
     
